@@ -4,6 +4,8 @@ import './App.css';
 const App: React.FunctionComponent = () => {
   const [mirna, setMirna] = useState<string>('');
   const [primer, setPrimer] = useState<string>('');
+  const [primerPrefix] = useState<string>('gcggcg');
+  const [primerSuffix] = useState<string>('AAAAAA');
   const [history, setHistory] = useState<string[]>([]);
   const [errorLength, setErrorLength] = useState<string | null>();
   const [errorCharacter, setErrorCharacter] = useState<string | null>();
@@ -43,22 +45,58 @@ const App: React.FunctionComponent = () => {
   function setValue(event: ChangeEvent<HTMLInputElement>): void {
     const value = event.target.value;
     setMirna(value);
+    setPrimer('');
     validateMirna(value);
   }
 
   /**
-   *
-   * @param miarn
+   * make the reverse complement for one letter
+   * @param {string} letter
+   * @return {string} the reverse
    */
-  function transformMiarnToPrimer(miarn: string) {
-    //
+  function transformTemplate(letter: string): string {
+    if (letter === 'a') {
+      return 't';
+    } else if (letter === 't' || letter === 'u') {
+      return 'a';
+    } else if (letter === 'f') {
+      return 'c';
+    } else if (letter === 'c') {
+      return 'g';
+    }
+    // error output
+    return 'X';
+  }
+
+  /**
+   * transform a miarn into a primer
+   * @param {string} miarn the value you want to transform
+   * @return {void}
+   */
+  function transformMiarnToPrimer(miarn: string): void {
+    // the first characters - the 6 last
+    const miarnPrefix = miarn.slice(0, -6);
+    // 6 last characters for transformation
+    const miarnSuffix = miarn.slice(-6);
+    // inverse the suffix
+    const reverseMiarnSuffix = miarnSuffix.split('').reverse().join("");
+    // transform the suffix
+    let reverse = '';
+    for(const letter in reverseMiarnSuffix.split('')) {
+      console.log(letter);
+      reverse += transformTemplate(reverseMiarnSuffix[letter]);
+    }
+    const primer = primerPrefix + miarnPrefix + primerSuffix + reverse;
+    setPrimer(primer);
   }
 
   return (
     <div className="App">
       <header className="App-header">
         <input type="text" value={mirna} onChange={(event: ChangeEvent<HTMLInputElement>) => setValue(event)}/>
-        <button>Send</button>
+        <button onClick={() => transformMiarnToPrimer(mirna)}>Send</button>
+        <p>{mirna}</p>
+        <p>{primer}</p>
         {(errorCharacter || errorEmptyValue || errorLength) &&
           <ul>
             {errorEmptyValue && <li>{errorEmptyValue}</li>}
