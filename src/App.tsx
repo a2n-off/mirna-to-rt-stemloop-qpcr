@@ -96,7 +96,7 @@ const App: React.FunctionComponent = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <div className="App-header">
         <input type="text" value={mirna} onChange={(event: ChangeEvent<HTMLInputElement>) => setValue(event)}/>
         {!(errorCharacter || errorEmptyValue || errorLength) &&
           <button onClick={() => transformMiarnToPrimer(mirna)}>Send</button>
@@ -110,7 +110,7 @@ const App: React.FunctionComponent = () => {
             {(!errorEmptyValue && errorCharacter) && <li>{errorCharacter}</li>}
           </ul>
         }
-      </header>
+      </div>
     </div>
   );
 }
