@@ -1,4 +1,4 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 import './App.css';
 
 const App: React.FunctionComponent = () => {
@@ -31,7 +31,7 @@ const App: React.FunctionComponent = () => {
       setErrorLength(null);
     }
     if (!authorizedCharacters.test(mirna)) {
-      setErrorCharacter('Authorized characters : ATGC or AUGC or atgc or augc');
+      setErrorCharacter('Authorized characters : ATGC or AUGC');
     } else {
       setErrorCharacter(null);
     }
@@ -55,13 +55,14 @@ const App: React.FunctionComponent = () => {
    * @return {string} the reverse
    */
   function transformTemplate(letter: string): string {
-    if (letter === 'a') {
+    const lowerLetter = letter.toLowerCase();
+    if (lowerLetter === 'a') {
       return 't';
-    } else if (letter === 't' || letter === 'u') {
+    } else if (lowerLetter === 't' || lowerLetter === 'u') {
       return 'a';
-    } else if (letter === 'f') {
+    } else if (lowerLetter === 'g') {
       return 'c';
-    } else if (letter === 'c') {
+    } else if (lowerLetter === 'c') {
       return 'g';
     }
     // error output
@@ -83,18 +84,23 @@ const App: React.FunctionComponent = () => {
     // transform the suffix
     let reverse = '';
     for(const letter in reverseMiarnSuffix.split('')) {
-      console.log(letter);
       reverse += transformTemplate(reverseMiarnSuffix[letter]);
     }
-    const primer = primerPrefix + miarnPrefix + primerSuffix + reverse;
+    const primer = primerPrefix + miarnPrefix + ' - ' + primerSuffix + reverse;
     setPrimer(primer);
   }
+
+  useEffect(() => {
+    validateMirna(mirna);
+  }, [])
 
   return (
     <div className="App">
       <header className="App-header">
         <input type="text" value={mirna} onChange={(event: ChangeEvent<HTMLInputElement>) => setValue(event)}/>
-        <button onClick={() => transformMiarnToPrimer(mirna)}>Send</button>
+        {!(errorCharacter || errorEmptyValue || errorLength) &&
+          <button onClick={() => transformMiarnToPrimer(mirna)}>Send</button>
+        }
         <p>{mirna}</p>
         <p>{primer}</p>
         {(errorCharacter || errorEmptyValue || errorLength) &&
