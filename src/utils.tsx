@@ -1,4 +1,26 @@
 /**
+ * check the mirna
+ * length is between 20 & 24
+ * authorized characters is ATGC | AUGC
+ * @param {string} mirna the value of mirna you want to check
+ * @return {string[]} array of error
+ */
+export function validateMirna(mirna: string): string[] {
+  const authorizedCharacters = new RegExp('^[AUTGCautgc]+$');
+  const errors = [];
+  if (!mirna) {
+    errors.push('Empty value');
+  }
+  if (mirna.length < 20 || mirna.length > 24) {
+    errors.push('miRNA length is between 20 and 24');
+  }
+  if (!authorizedCharacters.test(mirna)) {
+    errors.push('Authorized characters : ATGC or AUGC');
+  }
+  return errors;
+}
+
+/**
  * make the reverse complement for one letter
  * @param {string} letter
  * @return {string} the reverse

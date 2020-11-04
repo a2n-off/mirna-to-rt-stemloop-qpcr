@@ -1,7 +1,25 @@
+/* perso */
 td {
   padding: 10px;
 }
 
+.table-value {
+  text-align: left;
+}
+.table-type {
+  text-align: right;
+}
+
+.error {
+  color: red;
+}
+
+.name {color: chartreuse}
+.sequence {color: orange}
+.com {color: aquamarine}
+.unknown {color: #61dafb}
+
+/* natif */
 .App {
   text-align: center;
 }
