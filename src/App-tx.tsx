@@ -60,7 +60,7 @@ const App: React.FunctionComponent = () => {
         // check the format
         errors = validateMirna(cline);
         // if the format is ok transform the data
-        if (!errors) {
+        if (errors.length === 0) {
           cline = transformMiarnToPrimer(cline, primerPrefix, primerSuffix)
         }
       }
@@ -82,24 +82,24 @@ const App: React.FunctionComponent = () => {
         <button onClick={() => handleSubmit()}>Transform !</button>
         <table>
           <tbody>
-          <tr>
-            <td className="table-type">
-              {fastaReverse && fastaReverse.map((line: Line, key:number) => (
-                <React.Fragment key={key+'typefrag'}>
-                  <span className={line.errors.length > 0 ? 'error' : line.type} key={key+'typespan'}>{line.type}</span>
-                  <br key={key+'typebr'}/>
-                </React.Fragment>
-              ))}
-            </td>
-            <td className="table-value">
-              {fastaReverse && fastaReverse.map((line: Line, key:number) => (
-                <React.Fragment key={key+'valuefrag'}>
-                  <span className={line.errors.length > 0 ? 'error' : line.type} key={key+'valuespan'}>{line.value}</span>
-                  <br key={key+'valuebr'}/>
-                </React.Fragment>
-              ))}
-            </td>
-          </tr>
+            <tr>
+              <td className="table-type">
+                {fastaReverse && fastaReverse.map((line: Line, key:number) => (
+                  <React.Fragment key={key+'typefrag'}>
+                    <span className={line.errors.length > 0 ? 'error' : line.type} key={key+'typespan'}>{line.type}</span>
+                    <br key={key+'typebr'}/>
+                  </React.Fragment>
+                ))}
+              </td>
+              <td className="table-value">
+                {fastaReverse && fastaReverse.map((line: Line, key:number) => (
+                  <React.Fragment key={key+'valuefrag'}>
+                    <span className={line.errors.length > 0 ? 'error' : line.type} key={key+'valuespan'}>{line.value}</span>
+                    <br key={key+'valuebr'}/>
+                  </React.Fragment>
+                ))}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
