@@ -62,3 +62,104 @@ export function transformMiarnToPrimer(miarn: string, primerPrefix: string, prim
   const primer = primerPrefix + miarnPrefix + ' - ' + primerSuffix + reverse;
   return primer;
 }
+
+export interface Line {
+  type: {
+    name: string
+    color?: 'red' | 'orange' | 'yellow' | 'olive' | 'green' | 'teal' | 'blue' | 'violet' | 'purple' | 'pink' | 'brown' | 'grey' | 'black' | undefined
+  }
+  customName?: undefined | string
+  value: string
+  errors: string[]
+}
+
+/**
+ * return a set of example data for the input
+ * @return {string} the example data
+ */
+export function ExampleDataInput(): string {
+  return '> line break\n' +
+    '\n' +
+    '> value that looks like nothing\n' +
+    'qwerty12345\n' +
+    '> Error on a value that looks like a miRNA\n' +
+    'UCACCGG\n' +
+    '> cel-miR-36-3p MIMAT0000007 Caenorhabditis elegans miR-36-3p\n' +
+    'UCACCGGGUGAAAAUUCGCAUG'
+}
+
+/**
+ * return a set of example data transformed
+ * @return {Line[]} the example data
+ */
+export function ExampleDataTransformed(): Line[] {
+  return [
+    {
+      "type": {
+        "name": "header",
+        "color": "teal"
+      },
+      "value": "> line break",
+      "errors": []
+    },
+    {
+      "type": {
+        "name": ""
+      },
+      "value": "",
+      "errors": []
+    },
+    {
+      "type": {
+        "name": "header",
+        "color": "teal"
+      },
+      "value": "> value that looks like nothing",
+      "errors": []
+    },
+    {
+      "type": {
+        "name": "unknown",
+        "color": "grey"
+      },
+      "value": "qwerty12345",
+      "errors": []
+    },
+    {
+      "type": {
+        "name": "header",
+        "color": "teal"
+      },
+      "value": "> Error on a value that looks like a miRNA",
+      "errors": []
+    },
+    {
+      "type": {
+        "name": "sequence",
+        "color": "violet"
+      },
+      "customName": "_",
+      "value": "UCACCGG",
+      "errors": [
+        "miRNA length is between 20 and 24"
+      ]
+    },
+    {
+      "type": {
+        "name": "header",
+        "color": "teal"
+      },
+      "value": "> cel-miR-36-3p MIMAT0000007 Caenorhabditis elegans miR-36-3p",
+      "errors": []
+    },
+    {
+      "type": {
+        "name": "sequence",
+        "color": "violet"
+      },
+      "customName": "_",
+      "value": "GCGGCGUCACCGGGUGAAAAUU - GTCGTATCCAGTGCAGGGTCCGAGGTATTCGCACTGGATACGACcatgcg",
+      "errors": []
+    }
+  ];
+}

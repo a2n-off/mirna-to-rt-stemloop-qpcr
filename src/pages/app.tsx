@@ -1,16 +1,12 @@
 import React, {ChangeEvent, ReactNode, useState} from 'react';
-import {validateMirna, transformMiarnToPrimer} from '../utils/utils';
-import {Button, Icon, List, Label, Container, Form, TextArea, Placeholder, Table} from 'semantic-ui-react';
-
-interface Line {
-  type: {
-    name: string
-    color: 'red' | 'orange' | 'yellow' | 'olive' | 'green' | 'teal' | 'blue' | 'violet' | 'purple' | 'pink' | 'brown' | 'grey' | 'black' | undefined
-  }
-  customName: undefined | string
-  value: string
-  errors: string[]
-}
+import {
+  validateMirna,
+  transformMiarnToPrimer,
+  Line,
+  ExampleDataTransformed,
+  ExampleDataInput
+} from '../utils/utils';
+import {Button, Icon, Label, Container, Form, TextArea, Placeholder, Table} from 'semantic-ui-react';
 
 const App: React.FunctionComponent = () => {
   const [primerPrefix] = useState<string>('GCGGCG');
@@ -95,7 +91,7 @@ const App: React.FunctionComponent = () => {
         errors
       })
     }
-
+    console.log(lines)
     setFastaReverse(lines);
     setLoading(false);
   }
@@ -111,7 +107,7 @@ const App: React.FunctionComponent = () => {
       const arrayValue = value.toUpperCase().split('');
       return (
         arrayValue.map((value: string, index: number) => (
-          <React.Fragment key={index}>
+          <React.Fragment key={index+'card'}>
             {(value === 'G') && <span className="card bg-red">G</span>}
             {(value === 'T') && <span className="card bg-yellow">T</span>}
             {(value === 'A') && <span className="card bg-orange">A</span>}
@@ -120,6 +116,15 @@ const App: React.FunctionComponent = () => {
         ))
       )
     }
+  }
+
+  /**
+   * set example data
+   * @return {void} setstate
+   */
+  function setExampleData(): void {
+    setFastaReverse(ExampleDataTransformed());
+    setFasta(ExampleDataInput());
   }
 
   return (
@@ -131,6 +136,20 @@ const App: React.FunctionComponent = () => {
 
       <Button animated onClick={() => handleSubmit()}>
         <Button.Content visible>Transform</Button.Content>
+        <Button.Content hidden>
+          <Icon name='arrow right' />
+        </Button.Content>
+      </Button>
+
+      <Button animated onClick={() => setExampleData()}>
+        <Button.Content visible>Example data</Button.Content>
+        <Button.Content hidden>
+          <Icon name='arrow right' />
+        </Button.Content>
+      </Button>
+
+      <Button animated>
+        <Button.Content visible>Save</Button.Content>
         <Button.Content hidden>
           <Icon name='arrow right' />
         </Button.Content>
@@ -150,9 +169,9 @@ const App: React.FunctionComponent = () => {
         <Table.Body>
           {(!loading && fastaReverse) && fastaReverse.map((line: Line, key:number) => (
             (line.type.name === 'sequence' && line.errors.length === 0) ?
-              <React.Fragment>
+              <React.Fragment key={key}>
                 <Table.Row>
-                  <Table.Cell key={key+'rt'}>
+                  <Table.Cell>
                     <Label ribbon color={line.type.color} horizontal>
                       {line.customName ? 'primerRT' + line.customName : line.type.name}
                     </Label>
@@ -163,7 +182,7 @@ const App: React.FunctionComponent = () => {
                 </Table.Row>
 
                 <Table.Row>
-                  <Table.Cell key={key+'qpcr'}>
+                  <Table.Cell>
                     <Label ribbon color={line.type.color} horizontal>
                       {line.customName ? 'primerqPCR-Fwd' + line.customName : line.type.name}
                     </Label>
@@ -175,18 +194,18 @@ const App: React.FunctionComponent = () => {
               </React.Fragment> :
 
               <Table.Row>
-                <Table.Cell key={key}>
+                <Table.Cell>
                   <Label ribbon color={line.type.color} horizontal>
                     {line.type.name}
                   </Label>
                 </Table.Cell>
-                <Table.Cell key={key} error={(line.type.name === 'unknown' || line.errors.length > 0)}>
+                <Table.Cell error={(line.type.name === 'unknown' || line.errors.length > 0)}>
                   {(line.type.name === 'unknown' || line.errors.length > 0) && <Icon name='attention' />}
                   <span className={(line.type.name === 'unknown' || line.errors.length > 0) ? 'c-red' : ''}>
                     {line.value}
                     {line.errors.length > 0 &&
                     <i>
-                      {line.errors.map((value: string, index: number) => (
+                      {line.errors.map((value: string) => (
                         ' error(s) : ' + value + ' '
                       ))}
                     </i>
