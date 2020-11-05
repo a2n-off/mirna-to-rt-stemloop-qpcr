@@ -1,0 +1,24 @@
+.app {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+form {
+    margin-bottom: 15px;
+}
+
+.bg-red {background-color: red;}
+.bg-green {background-color: green;}
+.bg-orange {background-color: orange;}
+.bg-blue {background-color: blue;}
+
+.c-red {color: red;}
+
+.card {
+    padding: 5px;
+    color: #fff;
+}
+
+.grid {
+    display: flex;
+}
