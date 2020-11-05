@@ -102,23 +102,62 @@ const App: React.FunctionComponent = () => {
   /**
    * map the color for each character
    * @param {string} value primer rt | primer qpcr | mirna
+   * @param {'rt' | 'qpcr' | undefined} type the type of primer
    * @return {ReactNode}
    */
-  function mapColor(value: string): ReactNode {
+  function mapColor(value: string, type: string | undefined): ReactNode {
+    console.log(value);
     // lower case & array
     if (value) {
-      const arrayValue = value.toUpperCase().split('');
+      let tmpValue = value;
+      if (type === 'rt') {
+        tmpValue = value.slice(6);
+      } else if (type === 'qpcr') {
+        tmpValue = value.slice(45);
+      }
+      const arrayValue = tmpValue.toUpperCase().split('');
       return (
-        arrayValue.map((value: string, index: number) => (
-          <React.Fragment key={index+'card'}>
-            {(value === 'G') && <span className="card bg-red">G</span>}
-            {(value === 'T') && <span className="card bg-yellow">T</span>}
-            {(value === 'A') && <span className="card bg-orange">A</span>}
-            {(value === 'C') && <span className="card bg-blue">C</span>}
-          </React.Fragment>
-        ))
+        <React.Fragment>
+          {mapPrefix(type)}
+          {arrayValue.map((value: string, index: number) => (
+            <React.Fragment key={index+'card'}>
+              {(value === 'G') && <span className="card bg-red">G</span>}
+              {(value === 'T' || value === 'U') && <span className="card bg-yellow">T</span>}
+              {(value === 'A') && <span className="card bg-orange">A</span>}
+              {(value === 'C') && <span className="card bg-blue">C</span>}
+            </React.Fragment>
+            ))
+          }
+        </React.Fragment>
       )
     }
+  }
+
+  /**
+   * todo
+   * @param type
+   */
+  function mapPrefix(type: string | undefined): ReactNode | undefined {
+    const rt = primerPrefix.toUpperCase().split('');
+    const qpcr = primerSuffix.toUpperCase().split('');
+    if (type === 'rt') {
+      return (
+        <span className="nested">
+          {rt.map((value: string) => (
+            mapColor(value, undefined)
+          ))}
+        </span>
+      )
+    } else if (type === 'qpcr') {
+      return (
+        <span className="nested">
+          {qpcr.map((value: string) => (
+            mapColor(value, undefined)
+          ))}
+        </span>
+      )
+    }
+    return undefined;
   }
 
   /**
@@ -180,7 +219,7 @@ const App: React.FunctionComponent = () => {
                     </Label>
                   </Table.Cell>
                   <Table.Cell>
-                    {mapColor(line.value.split('-')[0])}
+                    {mapColor(line.value.split('-')[0], 'rt')}
                   </Table.Cell>
                 </Table.Row>
 
@@ -191,7 +230,7 @@ const App: React.FunctionComponent = () => {
                     </Label>
                   </Table.Cell>
                   <Table.Cell>
-                    {mapColor(line.value.split('-')[1])}
+                    {mapColor(line.value.split('-')[1], 'qpcr')}
                   </Table.Cell>
                 </Table.Row>
               </React.Fragment> :
