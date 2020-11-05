@@ -78,7 +78,11 @@ const App: React.FunctionComponent = () => {
         // parseInt is here because typescript linter consider line as a string
         const previousLine = lines[parseInt(line, 10) - 1];
         if (previousLine && previousLine.type.name === 'header') {
-          customName = '_' + lines[parseInt(line, 10) - 1].value.split(' ')[0].slice(1);
+          // without the >
+          const cnHead = previousLine.value.split('>')[1];
+          // without the comment
+          const cnComment = cnHead.trim().split(' ')[0];
+          customName = '_' + cnComment.slice(1);
         } else {
           customName = '';
         }
@@ -91,7 +95,6 @@ const App: React.FunctionComponent = () => {
         errors
       })
     }
-    console.log(lines)
     setFastaReverse(lines);
     setLoading(false);
   }
@@ -173,7 +176,7 @@ const App: React.FunctionComponent = () => {
                 <Table.Row>
                   <Table.Cell>
                     <Label ribbon color={line.type.color} horizontal>
-                      {line.customName ? 'primerRT' + line.customName : line.type.name}
+                      primerRT {line.customName ? line.customName : line.type.name}
                     </Label>
                   </Table.Cell>
                   <Table.Cell>
@@ -184,7 +187,7 @@ const App: React.FunctionComponent = () => {
                 <Table.Row>
                   <Table.Cell>
                     <Label ribbon color={line.type.color} horizontal>
-                      {line.customName ? 'primerqPCR-Fwd' + line.customName : line.type.name}
+                      primerqPCR-Fwd {line.customName ? line.customName : line.type.name}
                     </Label>
                   </Table.Cell>
                   <Table.Cell>
