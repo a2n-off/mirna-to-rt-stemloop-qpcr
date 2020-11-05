@@ -1,3 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@font-face {
+    font-family: 'JetBrains Mono';
+    src: url(../fonts/JetBrainsMono-Regular.woff2);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #2a2a2a;
+    color: #fff;
+}
+
 .app {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -7,18 +19,42 @@ form {
     margin-bottom: 15px;
 }
 
-.bg-red {background-color: red;}
-.bg-green {background-color: green;}
-.bg-orange {background-color: orange;}
-.bg-blue {background-color: blue;}
+.bg-red {background-color: #db2828;}
+.bg-yellow {background-color: #fbbd08;}
+.bg-orange {background-color: #f2711c;}
+.bg-blue {background-color: #2185d0;}
 
-.c-red {color: red;}
+.c-red {color: #db2828;}
+
+.ui.table td.error {
+    background-color: rgba(219, 40, 40, 0.2) !important;
+}
 
 .card {
+    font-family: 'JetBrains Mono', sans-serif;
     padding: 5px;
+    margin: 2px;
     color: #fff;
+    border-radius: 2px;
 }
 
 .grid {
     display: flex;
+}
+
+textarea {
+    background-color: #616161 !important;
+    color: #fff !important;
+}
+
+::-webkit-resizer {
+    display: none !important;
+}
+
+textarea::-webkit-resizer {
+    display: none !important;
+}
+
+textarea ::-webkit-resizer {
+    display: none !important;
 }

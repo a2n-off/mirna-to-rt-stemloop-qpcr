@@ -113,7 +113,7 @@ const App: React.FunctionComponent = () => {
         arrayValue.map((value: string, index: number) => (
           <React.Fragment key={index}>
             {(value === 'G') && <span className="card bg-red">G</span>}
-            {(value === 'T') && <span className="card bg-green">T</span>}
+            {(value === 'T') && <span className="card bg-yellow">T</span>}
             {(value === 'A') && <span className="card bg-orange">A</span>}
             {(value === 'C') && <span className="card bg-blue">C</span>}
           </React.Fragment>
@@ -146,7 +146,7 @@ const App: React.FunctionComponent = () => {
         </Placeholder>
       }
 
-      <Table celled>
+      <Table celled inverted selectable>
         <Table.Body>
           {(!loading && fastaReverse) && fastaReverse.map((line: Line, key:number) => (
             (line.type.name === 'sequence' && line.errors.length === 0) ?
@@ -180,17 +180,18 @@ const App: React.FunctionComponent = () => {
                     {line.type.name}
                   </Label>
                 </Table.Cell>
-                <Table.Cell key={key}>
-                <span className={(line.type.name === 'unknown' || line.errors.length > 0) ? 'c-red' : ''}>
-                  {line.value}
-                  {line.errors.length > 0 &&
-                  <i>
-                    {line.errors.map((value: string, index: number) => (
-                      ' error(s) : ' + value + ' '
-                    ))}
-                  </i>
-                  }
-                </span>
+                <Table.Cell key={key} error={(line.type.name === 'unknown' || line.errors.length > 0)}>
+                  {(line.type.name === 'unknown' || line.errors.length > 0) && <Icon name='attention' />}
+                  <span className={(line.type.name === 'unknown' || line.errors.length > 0) ? 'c-red' : ''}>
+                    {line.value}
+                    {line.errors.length > 0 &&
+                    <i>
+                      {line.errors.map((value: string, index: number) => (
+                        ' error(s) : ' + value + ' '
+                      ))}
+                    </i>
+                    }
+                  </span>
                 </Table.Cell>
               </Table.Row>
           ))}
