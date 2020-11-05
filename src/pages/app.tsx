@@ -134,8 +134,9 @@ const App: React.FunctionComponent = () => {
   }
 
   /**
-   * todo
-   * @param type
+   * generate the prefix for each sequence
+   * @param {string | undefined} type the type of the sequence
+   * @return {ReactNode | undefined} the prefix or nothing
    */
   function mapPrefix(type: string | undefined): ReactNode | undefined {
     const rt = primerPrefix.toUpperCase().split('');
