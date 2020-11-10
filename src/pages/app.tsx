@@ -3,7 +3,6 @@ import {
   validateMirna,
   transformMiarnToPrimer,
   Line,
-  ExampleDataTransformed,
   ExampleDataInput
 } from '../utils/utils';
 import {Button, Icon, Label, Container, Form, TextArea, Placeholder, Table} from 'semantic-ui-react';
@@ -107,7 +106,6 @@ const App: React.FunctionComponent = () => {
    * @return {ReactNode}
    */
   function mapColor(value: string, type: string | undefined): ReactNode {
-    console.log(value);
     // lower case & array
     if (value) {
       let tmpValue = value;
@@ -167,7 +165,6 @@ const App: React.FunctionComponent = () => {
    * @return {void} setstate
    */
   function setExampleData(): void {
-    setFastaReverse(ExampleDataTransformed());
     setFasta(ExampleDataInput());
   }
 
@@ -192,17 +189,14 @@ const App: React.FunctionComponent = () => {
             <div className="text">
               {fastaReverse.map((line: Line, key: number) => (
                 <section key={key}>
-                  <p>{line.type.name !== 'sequence' && line.value}</p>
-                  <p>
-                    {(line.type.name === 'sequence') &&
-                      'primerRT' + (line.customName && line.customName) + ' ' + line.value.split('-')[0]
-                    }
-                  </p>
-                  <p>
-                    {(line.type.name === 'sequence') &&
-                      'primerqPCR-Fwd' + (line.customName && line.customName) + ' ' + line.value.split('-')[1]
-                    }
-                  </p>
+                  {(line.type.name === 'sequence' && line.errors.length === 0) &&
+                    <React.Fragment>
+                      <p>{'> primerRT' + (line.customName && line.customName)}</p>
+                      <p>{line.value.split('-')[0]}</p>
+                      <p>{'> primerqPCR-Fwd' + (line.customName && line.customName)}</p>
+                      <p>{line.value.split('-')[1]}</p>
+                    </React.Fragment>
+                  }
                 </section>
               ))}
             </div>
@@ -250,58 +244,60 @@ const App: React.FunctionComponent = () => {
         </Placeholder>
       }
 
-      <Table celled inverted selectable>
-        <Table.Body>
-          {(!loading && fastaReverse) && fastaReverse.map((line: Line, key:number) => (
-            (line.type.name === 'sequence' && line.errors.length === 0) ?
-              <React.Fragment key={key}>
-                <Table.Row>
-                  <Table.Cell>
-                    <Label ribbon color={line.type.color} horizontal>
-                      primerRT {line.customName ? line.customName : line.type.name}
-                    </Label>
-                  </Table.Cell>
-                  <Table.Cell>
-                    {mapColor(line.value.split('-')[0], 'rt')}
-                  </Table.Cell>
-                </Table.Row>
+      <div className="show-table">
+        <Table celled inverted selectable>
+          <Table.Body>
+            {(!loading && fastaReverse) && fastaReverse.map((line: Line, key:number) => (
+              (line.type.name === 'sequence' && line.errors.length === 0) ?
+                <React.Fragment key={key}>
+                  <Table.Row>
+                    <Table.Cell>
+                      <Label ribbon color={line.type.color} horizontal>
+                        primerRT {line.customName ? line.customName : line.type.name}
+                      </Label>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {mapColor(line.value.split('-')[0], 'rt')}
+                    </Table.Cell>
+                  </Table.Row>
+
+                  <Table.Row>
+                    <Table.Cell>
+                      <Label ribbon color={line.type.color} horizontal>
+                        primerqPCR-Fwd {line.customName ? line.customName : line.type.name}
+                      </Label>
+                    </Table.Cell>
+                    <Table.Cell>
+                      {mapColor(line.value.split('-')[1], 'qpcr')}
+                    </Table.Cell>
+                  </Table.Row>
+                </React.Fragment> :
 
                 <Table.Row>
                   <Table.Cell>
                     <Label ribbon color={line.type.color} horizontal>
-                      primerqPCR-Fwd {line.customName ? line.customName : line.type.name}
+                      {line.type.name}
                     </Label>
                   </Table.Cell>
-                  <Table.Cell>
-                    {mapColor(line.value.split('-')[1], 'qpcr')}
-                  </Table.Cell>
-                </Table.Row>
-              </React.Fragment> :
-
-              <Table.Row>
-                <Table.Cell>
-                  <Label ribbon color={line.type.color} horizontal>
-                    {line.type.name}
-                  </Label>
-                </Table.Cell>
-                <Table.Cell error={(line.type.name === 'unknown' || line.errors.length > 0)}>
-                  {(line.type.name === 'unknown' || line.errors.length > 0) && <Icon name='attention' />}
-                  <span className={(line.type.name === 'unknown' || line.errors.length > 0) ? 'c-red' : ''}>
+                  <Table.Cell error={(line.type.name === 'unknown' || line.errors.length > 0)}>
+                    {(line.type.name === 'unknown' || line.errors.length > 0) && <Icon name='attention' />}
+                    <span className={(line.type.name === 'unknown' || line.errors.length > 0) ? 'c-red' : ''}>
                     {line.value}
-                    {line.errors.length > 0 &&
-                    <i>
-                      {line.errors.map((value: string) => (
-                        ' error(s) : ' + value + ' '
-                      ))}
-                    </i>
-                    }
+                      {line.errors.length > 0 &&
+                      <i>
+                        {line.errors.map((value: string) => (
+                          ' error(s) : ' + value + ' '
+                        ))}
+                      </i>
+                      }
                   </span>
-                </Table.Cell>
-              </Table.Row>
-          ))}
+                  </Table.Cell>
+                </Table.Row>
+            ))}
 
-        </Table.Body>
-      </Table>
+          </Table.Body>
+        </Table>
+      </div>
 
     </Container>
   );
