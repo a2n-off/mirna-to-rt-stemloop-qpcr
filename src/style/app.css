@@ -53,14 +53,6 @@ textarea {
     color: #fff !important;
 }
 
-::-webkit-resizer {
-    display: none !important;
-}
-
-textarea::-webkit-resizer {
-    display: none !important;
-}
-
-textarea ::-webkit-resizer {
-    display: none !important;
+.text {
+    padding: 15px;
 }

@@ -14,6 +14,7 @@ const App: React.FunctionComponent = () => {
   const [fasta, setFasta] = useState<string>('');
   const [fastaReverse, setFastaReverse] = useState<Line[] | null>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [seetext, setSeetext] = useState<boolean>(false);
 
   /**
    * set the type of each line
@@ -170,6 +171,47 @@ const App: React.FunctionComponent = () => {
     setFasta(ExampleDataInput());
   }
 
+  /**
+   * make text appear
+   */
+  function renderText(): void {
+    setSeetext(!seetext);
+  }
+
+  if (seetext) {
+    if (fastaReverse) {
+      return (
+        <React.Fragment>
+          <section className="text">
+            <Button animated onClick={() => renderText()}>
+              <Button.Content visible>Back</Button.Content>
+              <Button.Content hidden>
+                <Icon name='arrow left' />
+              </Button.Content>
+            </Button>
+            <div className="text">
+              {fastaReverse.map((line: Line, key: number) => (
+                <section key={key}>
+                  <p>{line.type.name !== 'sequence' && line.value}</p>
+                  <p>
+                    {(line.type.name === 'sequence') &&
+                      'primerRT' + (line.customName && line.customName) + ' ' + line.value.split('-')[0]
+                    }
+                  </p>
+                  <p>
+                    {(line.type.name === 'sequence') &&
+                      'primerqPCR-Fwd' + (line.customName && line.customName) + ' ' + line.value.split('-')[1]
+                    }
+                  </p>
+                </section>
+              ))}
+            </div>
+          </section>
+        </React.Fragment>
+      )
+    }
+  }
+
   return (
     <Container className="app">
 
@@ -191,7 +233,7 @@ const App: React.FunctionComponent = () => {
         </Button.Content>
       </Button>
 
-      <Button animated>
+      <Button animated onClick={() => renderText()}>
         <Button.Content visible>Save</Button.Content>
         <Button.Content hidden>
           <Icon name='arrow right' />
